@@ -284,7 +284,7 @@ public class Solution
 //      i++;
 //    }
 //
-//    Arrays.sort(num);
+//    Arrays.heapSort(num);
 //
 //    for (Node n : num) {
 //      if (n.number == 0 && strBuf.length() != 0)

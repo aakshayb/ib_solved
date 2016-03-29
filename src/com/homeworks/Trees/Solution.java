@@ -16,13 +16,22 @@ public class Solution
     List another2 = sol.preOrderTraversal(root);
     List another3 = sol.postOrderTraversal(root);
 
+
     int ret = 0;
+    //case 1
     ret = sol.get(2);
     sol.set(2,6);
-    sol.get(1);
+    ret = sol.get(1);
     sol.set(1,5);
     sol.set(1,2);
 
+    ret = sol.getVal(2);
+    sol.setVal(2,6);
+    ret =sol.getVal(1);
+    sol.setVal(1,5);
+    sol.setVal(1,2);
+
+    //Case2
     sol.treeMap.clear();
     sol.set(2,1);
     sol.set(1,1);
@@ -31,16 +40,12 @@ public class Solution
     ret = sol.get(1);
     ret = sol.get(2);
 
-    ret = sol.get(1);
-    ret = sol.get(2);
-    sol.set(1,1);
-    sol.set(2,3);
-    sol.set(4,1);
-    ret = sol.get(1);
-    ret = sol.get(2);
-    ret = sol.get(10);
-    sol.set(6,14);
-    sol.set(9,24);
+    sol.setVal(2,1);
+    sol.setVal(1,1);
+    sol.setVal(2,3);
+    sol.setVal(4,1);
+    ret = sol.getVal(1);
+    ret = sol.getVal(2);
 
 
     int stop =1;
@@ -135,6 +140,115 @@ public class Solution
   }
 
 
+  //LRU implementation with just HashMap and LinkedList
+  int N;
+  Value head, tail;
+  HashMap<Integer, Value> hashMap;
+  class Value
+  {
+    int val, key;
+    Value next, previous;
+
+    Value(int num, int key1)
+    {
+      val = num;
+      key = key1;
+    }
+  }
+
+  public int getVal(int key)
+  {
+    if(hashMap.containsKey(key))
+    {
+      Value value = hashMap.get(key);
+      Value node = head;
+      while(node.key!=value.key && node.val!= value.val)
+      {
+        node = node.next;
+      }
+      if(node.previous!=null)
+        node.previous.next = node.next;
+      if(node.next!=null)
+        node.next.previous = node.previous;
+      if(node == head)
+        head = node.next;
+      if(node == tail)
+        tail = tail.previous;
+
+      head.previous = value;
+      value.next = head;
+      head = value;
+      return value.val;
+    }
+    return -1;
+  }
+  public void setVal(int key, int value )
+  {
+    Value newVal = new Value(value, key);
+    if(hashMap.containsKey(key))
+    {
+      if(head ==null || tail == null)
+        return;
+      Value node = head;
+      while( node.key!=newVal.key && node.val != newVal.val )
+      {
+        node = node.next;
+      }
+      if(node.previous!=null)
+        node.previous.next = node.next;
+      if(node.next!=null)
+        node.next.previous = node.previous;
+      if(node == head)
+        head = node.next;
+      if(node == tail)
+        tail = tail.previous;
+
+      head.previous = newVal;
+      newVal.next = head;
+      head = newVal;
+      hashMap.remove(key);
+      hashMap.put(key, newVal);
+    }else
+    {
+
+      if(hashMap.size() == capacity)
+      {
+        if(head ==null || tail == null)
+            return ;
+        hashMap.remove(tail.key);
+        tail = tail.previous;
+        tail.next =null;
+        head.previous = newVal;
+        newVal.next = head;
+        head = newVal;
+        hashMap.put(key, newVal);
+      }
+      else
+      {
+        hashMap.put(key, newVal );
+        if(head == null) {
+          head = newVal;
+        }
+        else
+        {
+          head.previous = newVal;
+          newVal.next = head;
+          head = newVal;
+        }
+        if(tail == null)
+          tail = newVal;
+        else
+        {
+          tail.previous = newVal;
+        }
+      }
+    }
+
+  }
+
+
+  // LRU implementation using treeMap
+
   TreeMap<Key, Integer > treeMap;
   int capacity;
   int counter ;
@@ -142,17 +256,26 @@ public class Solution
     treeMap = new TreeMap<>();
     this.capacity = capacity;
     this.counter=0;
+    hashMap = new HashMap<>();
   }
 
   public int get(int key) {
     Key key1 = new Key(key,counter++);
+    return getValueIfContained(treeMap, key1, -1);
+  }
+
+  private int getValueIfContained(TreeMap<Key, Integer> treeMap, Key key, int value)
+  {
     for(Key each: treeMap.keySet())
     {
-      if(each.equals(key1))
+      if(each.equals(key))
       {
         int val = treeMap.get(each);
         treeMap.remove(each);
-        treeMap.put(key1,val);
+        if(value == -1)
+          treeMap.put(key,val);
+        else
+          treeMap.put(key,value);
         return val;
       }
     }
@@ -161,20 +284,14 @@ public class Solution
 
   public void set(int key, int value) {
     Key key1 = new Key(key,counter++);
-    for(Key each: treeMap.keySet())
-    {
-      if(each.equals(key1))
-      {
-        int val = treeMap.get(each);
-        treeMap.remove(each);
-        treeMap.put(key1,value);
-        return;
-      }
-    }
+    int retVal = getValueIfContained(treeMap, key1, value);
+    if(retVal !=-1) return;
+
     if(treeMap.size() == capacity)
       treeMap.remove(treeMap.lastKey());
     treeMap.put(key1, value);
   }
+
   class Key implements Comparable<Key>
   {
     int num;
@@ -214,9 +331,5 @@ public class Solution
     }
 
   }
-
-
-
-
 
 }
