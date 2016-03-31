@@ -13,6 +13,7 @@ public class InsertionSort
     ListNode retNode = new InsertionSort().insertionSort(node);
     int another =1;
   }
+
   private ListNode insertionSort(ListNode head)
   {
     ListNode fakeHead = new ListNode(0);

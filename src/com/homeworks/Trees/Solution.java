@@ -201,7 +201,7 @@ public class Solution
 
 
   //LRU implementation with just HashMap and LinkedList
-  int N;
+
   Value head, tail;
   HashMap<Integer, Value> hashMap;
   class Value
