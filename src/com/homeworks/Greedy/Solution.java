@@ -13,6 +13,7 @@ public class Solution
   {
     Solution solution = new Solution();
     int maxProduct = solution.maxp3(new ArrayList<>(Arrays.asList(3, -5, 20)));
+    int maxDistance = solution.mice(new ArrayList<>(Arrays.asList(4, -4, 2)), new ArrayList<>(Arrays.asList(4,0,5)));
     int ret =0;
   }
   public int maxp3(ArrayList<Integer> a) {
@@ -24,5 +25,15 @@ public class Solution
     int max = a.get(lastIndex) * a.get(lastIndex-1) * a.get(lastIndex -2);
     max = Math.max(max, a.get(0)* a.get(1)* a.get(lastIndex));
     return max;
+  }
+
+  public int mice(ArrayList<Integer> a, ArrayList<Integer> b) {
+    Collections.sort(a);
+    Collections.sort(b);
+
+    int maxDistance = -1;
+    for(int i=0; i< a.size(); i++)
+      maxDistance = Math.max(maxDistance, Math.abs(a.get(i) - b.get(i)) );
+    return maxDistance;
   }
 }
