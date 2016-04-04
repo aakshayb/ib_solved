@@ -50,6 +50,50 @@ public class Solution
 
     int stop =1;
   }
+
+  public void connect(TreeLinkNode root) {
+    TreeLinkNode iter = root, prev =null;
+    if(root ==null)
+      return;
+    root.next = null;
+    while(iter!=null)
+    {
+      TreeLinkNode iter2 = iter;
+      while(iter2!=null)
+      {
+        if(iter2.left!=null)
+        {
+
+          iter2.left.next = iter2.right;
+
+        }
+        if(iter2.right!=null)
+          iter2.right.next = getNextRight(iter2);
+        iter2 = iter2.next;
+      }
+      if(iter.left !=null)
+        iter = iter.left;
+      else if (iter.right != null)
+        iter = iter.right;
+      else
+        iter = getNextRight(iter);
+    }
+  }
+
+  private TreeLinkNode getNextRight(TreeLinkNode p)
+  {
+    TreeLinkNode temp = p.next;
+    while(temp!=null)
+    {
+      if(temp.left!=null)
+        return temp.left;
+      if(temp.right != null)
+        return temp.right;
+      temp = temp.next;
+    }
+    return null;
+  }
+
   private ArrayList<Integer> inOrderTraversal(TreeNode root)
   {
     ArrayList<Integer> retList = new ArrayList<>();
@@ -121,6 +165,33 @@ public class Solution
     }
     return retList;
   }
+
+  public ArrayList<ArrayList<Integer>> levelOrder(TreeNode a) {
+    ArrayList<ArrayList<Integer>> retList = new ArrayList<ArrayList<Integer>>();
+    ArrayList<Integer> each = new ArrayList<>();
+
+    Queue<TreeNode> current = new LinkedList<>();
+    Queue<TreeNode> next = new LinkedList<>();
+    current.add(a);
+    while(!current.isEmpty())
+    {
+      TreeNode curr = current.remove();
+      if(curr.left!=null)
+        next.add(curr.left);
+      if(curr.right!=null)
+        next.add(curr.right);
+      each.add(curr.val);
+      if(current.isEmpty())
+      {
+        current = next;
+        next = new LinkedList<>();
+        retList.add(each);
+        each = new ArrayList<>();
+      }
+    }
+    return retList;
+  }
+
 
   public int hasPathSum(TreeNode a, int b) {
     return hasPathSum(a, b, 0);

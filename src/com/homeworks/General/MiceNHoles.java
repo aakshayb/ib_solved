@@ -179,6 +179,7 @@ public class MiceNHoles
     }
     return maxDistance;
   }
+
   private List<List<Integer>> createNewList(List<List<Integer>> originalList, int a)
   {
     List<List<Integer>> newSubList = new ArrayList<>();

@@ -84,50 +84,6 @@ public class Graph
     return new AbstractMap.SimpleEntry<Integer, Boolean>(Math.max(leftKV.getKey(), rightKV.getKey()), false);
   }
 
-  public ArrayList<ArrayList<Integer>> levelOrder(TreeNode a) {
-    Queue<TreeNode> queue = new LinkedList<>();
-    ArrayList<ArrayList<Integer>> retList = new ArrayList<ArrayList<Integer>>();
-    ArrayList<Integer> each = new ArrayList<>();
-    queue.add(a);
-    HashMap <Integer, Integer> index = new HashMap<>();
-    int l =0, j=0;
-    while(!queue.isEmpty())
-    {
-      TreeNode current = queue.remove();
-      l++;
-      each.add(current.val);
-
-      if(current.left!=null)
-      {
-        queue.add(current.left);
-        j++;
-      }
-      if(current.right !=null)
-      {
-        queue.add(current.right);
-        j++;
-      }
-      index.put(l, j );
-    }
-    index.size();
-
-
-    int ind = 1;
-    for(int i= 0; i < each.size(); i++)
-    {
-      if(!index.containsKey(i))
-        break;
-      ArrayList<Integer> added = new ArrayList<>();
-      int k = index.get(i);
-      for(int in = ind; in < ind+k; in++)
-      {
-        added.add(each.get(in));
-      }
-      ind += k ;
-      retList.add(added);
-    }
-    return retList;
-  }
 
 
   private void shortestPath(Vertex start)
