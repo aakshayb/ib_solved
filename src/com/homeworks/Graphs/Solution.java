@@ -36,8 +36,76 @@ public class Solution
     exist = shapes.exist(new ArrayList<>(Arrays.asList("ABCE", "SFCS", "ADEE")), "ABFSAB"); // should return 1
     exist = shapes.exist(new ArrayList<>(Arrays.asList("ABCE", "SFCS", "ADEE")), "ABCD"); // should return 0
 
+     String b = new StringBuilder("CHOO").reverse().toString();
+    int test = shapes.automata(new ArrayList<>(Arrays.asList(0, 2, 1)), new ArrayList<>(Arrays.asList(1,0,2)), new ArrayList<>(Arrays.asList(0,1)), 0, 2);
+
     int g =1;
   }
+
+  public int automata(ArrayList<Integer> a, ArrayList<Integer> b, ArrayList<Integer> c, int D, int E) {
+    states = new HashMap<>();
+    State start = null;
+    for(int i=0; i< a.size();i++)
+    {
+      State state = new State(i);
+      State zeroState = new State(a.get(i));
+      State oneState = new State(b.get(i));
+      if(!states.containsKey(i))
+        states.put(i,state);
+      if(!states.containsKey(a.get(i)))
+        states.put(a.get(i),zeroState);
+      if(!states.containsKey(b.get(i)))
+        states.put(b.get(i),oneState);
+      state = states.get(i);
+      zeroState = states.get(a.get(i));
+      oneState = states.get(b.get(i));
+
+      state.one = oneState;
+      state.zero = zeroState;
+      state.isAccept = c.contains(i);
+      if(i == D)
+        start = state;
+    }
+    return  numStrings (start, E);
+  }
+  private int numStrings(State start, int N )
+  {
+    if(N==0) {
+      if(start.isAccept)
+        return 1;
+      else
+        return 0;
+    }
+    int num = numStrings(start.one, N-1);
+    num += numStrings(start.zero, N-1);
+    return num;
+  }
+  HashMap<Integer, State> states;
+  class State
+  {
+    int index;
+    State one,zero;
+    boolean isAccept = false;
+    State(int a)
+    {
+      index =a;
+    }
+    @Override
+    public int hashCode()
+    {
+      return Integer.hashCode(index);
+    }
+    @Override
+    public boolean equals(Object o)
+    {
+      if(o instanceof State){
+        State toCompare = (State) o;
+        return this.index == toCompare.index;
+      }
+      return false;
+    }
+  }
+
 
   public int exist(ArrayList<String> a, String b) {
     int index =0;

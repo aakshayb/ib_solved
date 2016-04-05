@@ -51,11 +51,98 @@ public class Solution
 
     int N = 1000;
     another.goodMatcher(N);
+    B = another.getMode(new ArrayList<>(Arrays.asList(2,2,2,3,3)), new ArrayList<>(Arrays.asList(  new ArrayList<Integer>(Arrays.asList(1,3)), new ArrayList<Integer>(Arrays.asList(5,4)), new ArrayList<Integer>(Arrays.asList(2,4))      ))   );
 
-
+   // B = another.maxLCS("abc");
+    B = another.maxLCS("xwggxaknml");
     String abc = "abc";
   }
 
+  public ArrayList<Integer> maxLCS(String a) {
+
+    int maxVal =0;
+    int j = 1;
+    for(int i =0; i< a.length()-1;i++)
+    {
+      int val = LCS(a.substring(0, i+1), rev(a.substring(i+1, a.length())) );
+      if(val > maxVal)
+      {
+        maxVal = val;
+        j = i+1;
+      }
+    }
+    return new ArrayList<>(Arrays.asList(j, maxVal));
+  }
+
+  private String rev(String a)
+  {
+    return  new StringBuilder(a).reverse().toString();
+  }
+
+  private int LCS(String a, String b)
+  {
+    int maxLen = -1;
+    String first=a, second=b;
+    if(a.length() < b.length())
+    {
+      first =b;
+      second =a;
+    }
+
+    for(int i=0; i< second.length(); i++)
+    {
+      int ind = 0;
+      for(int j=0; j< first.length(); j++)
+      {
+        if(i+ind < second.length()&& first.charAt(j) == second.charAt(i+ind))
+        {
+          ind++;
+          maxLen = Math.max(maxLen, ind);
+        }else
+        {
+          ind =0;
+        }
+
+      }
+    }
+    return maxLen;
+  }
+
+  public ArrayList<Integer> getMode(ArrayList<Integer> a, ArrayList<ArrayList<Integer>> b) {
+    ArrayList<Integer> retList = new ArrayList<>();
+    HashMap<Integer, Integer> hashMap = new HashMap<>();
+    for(int i=0; i< a.size();i++)
+    {
+      if(!hashMap.containsKey(a.get(i)))
+        hashMap.put(a.get(i), 1);
+      else
+        hashMap.put(a.get(i), hashMap.get(a.get(i))+1);
+    }
+    for(ArrayList<Integer> each : b)
+    {
+      int prevNum = a.get(each.get(0)-1);
+      int nextNum = each.get(1);
+      hashMap.put(prevNum, hashMap.get(prevNum)-1);
+      if(!hashMap.containsKey(nextNum))
+        hashMap.put(nextNum, 1);
+      else
+        hashMap.put(nextNum, hashMap.get(nextNum)+1);
+      a.set(each.get(0)-1, each.get(1));
+      int Mode = a.get(0);
+      for(Map.Entry<Integer, Integer> entry: hashMap.entrySet())
+      {
+        int freq = entry.getValue();
+        if(freq > hashMap.get(Mode))
+          Mode = entry.getKey();
+        else if (freq == hashMap.get(Mode))
+        {
+          Mode = Math.min(entry.getKey(), Mode);
+        }
+      }
+      retList.add(Mode);
+    }
+    return retList;
+  }
   private  void goodMatcher(int N)
   {
     for(int a = 1; a <= N; a++)
