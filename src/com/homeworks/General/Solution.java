@@ -10,6 +10,8 @@ public class Solution
 {
   public static void main(String args[])
   {
+    BigInteger bg = BigInteger.valueOf(1234556778888434344L);
+    String c = "ab".substring(0,0);
     Solution sorter = new Solution();
     List<Integer> arr = Arrays.asList(54,26,93,17,77,31,44,55,20);
     List<Integer> arrayList = new ArrayList<>(arr);
@@ -29,6 +31,7 @@ public class Solution
 
     List<Integer> A = Arrays.asList(-2,-1,0,2,3);
     Collections.sort(A);
+    Arrays.sort("sasa".toCharArray());
     boolean found = false;
 
     int j = A.size() - 1;
@@ -88,6 +91,7 @@ public class Solution
       first =b;
       second =a;
     }
+
 
     for(int i=0; i< second.length(); i++)
     {
